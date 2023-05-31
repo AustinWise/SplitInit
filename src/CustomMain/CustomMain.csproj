@@ -9,6 +9,9 @@
     <InvariantGlobalization>true</InvariantGlobalization>
 
     <CustomNativeMain>true</CustomNativeMain>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <ItsWindows>false</ItsWindows>
     <ItsWindows Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))">true</ItsWindows>
     <CustomMainInput>$(MSBuildThisFileDirectory)CustomMain.cpp</CustomMainInput>
@@ -20,10 +23,9 @@
           Inputs="$(CustomMainInput)"
           Outputs="$(CustomMainObject)"
           BeforeTargets="LinkNative">
-    <PropertyGroup>
-    </PropertyGroup>
+
     <Exec Condition="'$(ItsWindows)' != 'true'" Command="cc -c $(CustomMainInput) -o $(CustomMainObject)" />
-    <Exec Condition="'$(ItsWindows)' == 'true'" Command="cl /c $(CustomMainInput) /out:$(CustomMainObject)" />
+    <Exec Condition="'$(ItsWindows)' == 'true'" Command="cl /c $(CustomMainInput) /Fo:$(CustomMainObject)" />
 
     <ItemGroup>
       <LinkerArg Include="$(CustomMainObject)" />
