@@ -12,9 +12,14 @@ When set to `true` in your `.csproj` file, this property causes the NativeAOT bu
 system to not include an unmanaged `main` function. Instead you have to supply
 one using a `NativeLibrary` item in the `.csproj` file.
 
-You can call the `__managed__Main` to execute the managed main function. Before
-calling `__managed__Main`, you can also call
+In your unmanaged `main` function, your program can call
 [`UnmanagedCallersOnly`](https://learn.microsoft.com/dotnet/api/system.runtime.interopservices.unmanagedcallersonlyattribute)
+functions. Your unmanaged `main` function can manipulate the command line arguments
+`argc` and `argv` before passing them to the `__managed__Main` function to
+execute the managed main function.
+
+The NativeAOT runtime will be initialized on the first call to a reverse-P/Invoke
+function. `UnmanagedCallersOnly` functions and `__managed__Main` are reverse-P/Invoke
 functions.
 
 See the [`src/CustomMain`](src/CustomMain) folder for an example.

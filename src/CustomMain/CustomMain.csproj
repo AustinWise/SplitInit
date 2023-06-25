@@ -10,17 +10,32 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <!--
+     This tells the NativeAOT build system that we will be supplying our own native
+     main function.
+    -->
+    <CustomNativeMain>true</CustomNativeMain>
+  </PropertyGroup>
+  <ItemGroup>
+    <!--
+     Add an object file to be linked into the finial executable that contains our
+     native main function. The CustomMainObject is defined below.
+     -->
+    <NativeLibrary Include="$(CustomMainObject)" />
+  </ItemGroup>
+
+  <!--
+    The rest of this file handles compiling the C++ file into a object file.
+    -->
+
+  <PropertyGroup>
     <CustomNativeMain>true</CustomNativeMain>
     <ItsWindows>false</ItsWindows>
     <ItsWindows Condition="$([MSBuild]::IsOSPlatform('WINDOWS'))">true</ItsWindows>
     <CustomMainInput>$(MSBuildThisFileDirectory)CustomMain.cpp</CustomMainInput>
-    <CustomMainObject Condition="'$(ItsWindows)' == 'true'">$(MSBuildThisFileDirectory)CustomMain.obj</CustomMainObject>
     <CustomMainObject Condition="'$(ItsWindows)' != 'true'">$(MSBuildThisFileDirectory)CustomMain.o</CustomMainObject>
+    <CustomMainObject Condition="'$(ItsWindows)' == 'true'">$(MSBuildThisFileDirectory)CustomMain.obj</CustomMainObject>
   </PropertyGroup>
-
-  <ItemGroup>
-    <NativeLibrary Include="$(CustomMainObject)" />
-  </ItemGroup>
 
   <Target Name="CompileMyCustomMain"
           Inputs="$(CustomMainInput)"
